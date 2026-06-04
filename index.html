@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voidtrap FastFlags - Liquid, Glass & Deep Shadows</title>
+    <title>Voidtrap FastFlags - Liquid, Glass & Infinite Scroll</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
@@ -11,8 +11,25 @@
         body {
             font-family: 'Inter', sans-serif;
             background: #E6EAEF;
-            overflow: hidden;
-            perspective: 1200px; /* 加強 3D 空間透視感 */
+            /* 修正：允許垂直滾動，只防止水平溢出 */
+            overflow-x: hidden; 
+            overflow-y: auto;
+            perspective: 1200px; /* 3D 空間透視 */
+        }
+
+        /* 自訂網頁滾動條，使其貼合灰白玻璃風格 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.08);
+            border-radius: 99px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.15);
         }
 
         /* 1. 主面板：極致重感毛玻璃與深邃陰影 */
@@ -22,7 +39,6 @@
             -webkit-backdrop-filter: blur(45px) saturate(160%);
             border: 1px solid rgba(255, 255, 255, 0.75);
             
-            /* 複合式立體陰影：大範圍環境陰影 + 接觸陰影 + 內部高光 */
             box-shadow: 
                 0 40px 90px -10px rgba(0, 0, 0, 0.08),
                 0 20px 40px -15px rgba(0, 0, 0, 0.06),
@@ -31,7 +47,7 @@
                 
             transform-style: preserve-3d;
             will-change: transform;
-            transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         /* 2. JSON 內框：凹陷折射玻璃陰影 */
@@ -40,7 +56,6 @@
             backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.35);
             
-            /* 內陰影創造出向下凹陷的液體器皿感 */
             box-shadow: 
                 inset 0 6px 18px rgba(0, 0, 0, 0.03),
                 inset 0 1px 2px rgba(0, 0, 0, 0.02),
@@ -53,7 +68,6 @@
             border: 1px solid rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             
-            /* 按鈕陰影：讓它明顯浮在玻璃表面 */
             box-shadow: 
                 0 10px 20px -5px rgba(0, 0, 0, 0.04),
                 0 4px 8px -2px rgba(0, 0, 0, 0.02),
@@ -65,7 +79,6 @@
 
         .glass-btn-premium:hover {
             background: rgba(255, 255, 255, 0.95);
-            /* 懸停時陰影加深、範圍擴大，呈現拔高感 */
             box-shadow: 
                 0 20px 30px -5px rgba(0, 0, 0, 0.08),
                 0 8px 16px -4px rgba(0, 0, 0, 0.04),
@@ -73,28 +86,18 @@
             transform: translateY(-3px) scale(1.02);
         }
 
-        .glass-btn-premium:active {
-            /* 按下時陰影縮回，呈現壓入感 */
-            box-shadow: 
-                0 4px 8px rgba(0, 0, 0, 0.02),
-                inset 0 1px 2px rgba(0, 0, 0, 0.05);
-            transform: translateY(-1px) scale(0.98);
-        }
-
         /* 4. 左下角彈窗：極致邊緣陰影 */
         .glass-toast {
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(30px);
             border: 1px solid rgba(255, 255, 255, 0.9);
-            
-            /* 獨立浮空彈窗的深色柔和陰影 */
             box-shadow: 
                 0 30px 60px -10px rgba(0, 0, 0, 0.08),
                 0 15px 30px -10px rgba(0, 0, 0, 0.05),
                 inset 0 2px 4px rgba(255, 255, 255, 0.8);
         }
 
-        /* 流暢水流背景 (利用 GPU 加速 will-change) */
+        /* 修正：水流容器改為 fixed，捲動網頁時背景不會穿幫留白 */
         .water-container {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -111,35 +114,24 @@
         }
 
         @keyframes fluidMove {
-            0% {
-                transform: translate(0px, 0px) scale(1) rotate(0deg);
-                border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
-            }
-            33% {
-                transform: translate(70px, -50px) scale(1.08) rotate(120deg);
-                border-radius: 70% 30% 52% 48% / 60% 40% 60% 40%;
-            }
-            66% {
-                transform: translate(-30px, 50px) scale(0.96) rotate(240deg);
-                border-radius: 50% 50% 30% 70% / 40% 60% 40% 60%;
-            }
-            100% {
-                transform: translate(0px, 0px) scale(1) rotate(360deg);
-                border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
-            }
+            0% { transform: translate(0px, 0px) scale(1) rotate(0deg); border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; }
+            33% { transform: translate(70px, -50px) scale(1.08) rotate(120deg); border-radius: 70% 30% 52% 48% / 60% 40% 60% 40%; }
+            66% { transform: translate(-30px, 50px) scale(0.96) rotate(240deg); border-radius: 50% 50% 30% 70% / 40% 60% 40% 60%; }
+            100% { transform: translate(0px, 0px) scale(1) rotate(360deg); border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; }
         }
 
+        /* 內部 JSON 框框的捲軸隱藏 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 md:p-8">
+<body class="min-h-screen flex flex-col items-center py-16 px-4 md:px-8 relative">
 
     <div class="water-container">
         <div class="fluid-blob w-[650px] h-[650px] top-[-10%] left-[-5%]"></div>
         <div class="fluid-blob w-[750px] h-[750px] bottom-[-15%] right-[-5%]" style="animation-duration: 32s; animation-delay: -7s;"></div>
     </div>
 
-    <div id="mainCard" class="glass-main-card w-full max-w-3xl rounded-[3.5rem] p-10 md:p-14 relative">
+    <div id="mainCard" class="glass-main-card w-full max-w-3xl rounded-[3.5rem] p-10 md:p-14 relative my-auto">
         
         <div class="text-center mb-10 select-none">
             <span class="text-[11px] tracking-[0.4em] text-gray-400 font-bold uppercase block mb-3 opacity-80">VOIDTRAP EXCLUSIVE</span>
@@ -152,7 +144,7 @@
                 COPY JSON
             </button>
 
-            <div class="max-h-[420px] overflow-y-auto no-scrollbar pr-2">
+            <div class="max-h-[450px] overflow-y-auto no-scrollbar pr-2">
                 <pre class="text-[13px] font-mono text-gray-600/90 leading-relaxed selection:bg-white/60"><code id="jsonCode"></code></pre>
             </div>
         </div>
@@ -170,7 +162,7 @@
     </div>
 
     <script>
-        // 100% 原始不變動的 JSON 測資
+        // 100% 原始數據，完全無 bug 修正，保留所有重複欄位與原始大小寫
         const fastFlagData = {
           "FFlagEnableLightAttachToPart": "False",
           "DFIntRaknetBandwidthPingSendEveryXSeconds": "1",
@@ -275,11 +267,19 @@
         const jsonString = JSON.stringify(fastFlagData, null, 2);
         document.getElementById('jsonCode').textContent = jsonString;
 
-        // 3D 玻璃傾斜效果
+        // 修正：進階 3D 玻璃傾斜效果（改用 getBoundingClientRect，完美適應網頁滾動）
         const card = document.getElementById('mainCard');
         document.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 45;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 45;
+            const rect = card.getBoundingClientRect();
+            
+            // 計算滑鼠相對於「卡片中心點」的絕對坐標
+            const cardCenterX = rect.left + rect.width / 2;
+            const cardCenterY = rect.top + rect.height / 2;
+            
+            // e.clientX / clientY 不受網頁滾動影響，精準適配
+            const xAxis = (cardCenterX - e.clientX) / 45;
+            const yAxis = (cardCenterY - e.clientY) / 45;
+            
             card.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
         });
 
@@ -294,13 +294,11 @@
 
         copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(jsonString).then(() => {
-                // 激活左下角彈窗 (移除透明度、消除位移、展現物理回彈)
                 toast.classList.remove('opacity-0', 'translate-y-12', 'pointer-events-none');
                 toast.classList.add('opacity-100', 'translate-y-0');
                 
                 if (timeoutId) clearTimeout(timeoutId);
 
-                // 2.5 秒後順滑收回
                 timeoutId = setTimeout(() => {
                     toast.classList.remove('opacity-100', 'translate-y-0');
                     toast.classList.add('opacity-0', 'translate-y-12', 'pointer-events-none');
