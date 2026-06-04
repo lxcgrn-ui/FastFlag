@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voidtrap FastFlags - Top Left Toast Edition</title>
+    <title>Voidtrap FastFlags - Ultimate Download Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
@@ -31,7 +31,7 @@
             background: rgba(0, 0, 0, 0.15);
         }
 
-        /* 1. 主面板：重感毛玻璃與深邃陰影 */
+        /* 1. 主面板與彈窗面板：重感毛玻璃與深邃陰影 */
         .glass-main-card {
             background: rgba(255, 255, 255, 0.38);
             backdrop-filter: blur(45px) saturate(160%);
@@ -61,7 +61,7 @@
                 0 10px 30px rgba(255, 255, 255, 0.5);
         }
 
-        /* 3. 複製按鈕 */
+        /* 3. 複製與下載按鈕 */
         .glass-btn-premium {
             background: rgba(255, 255, 255, 0.55);
             border: 1px solid rgba(255, 255, 255, 0.85);
@@ -129,6 +129,13 @@
         <div class="fluid-blob w-[750px] h-[750px] bottom-[-15%] right-[-5%]" style="animation-duration: 32s; animation-delay: -7s;"></div>
     </div>
 
+    <div class="fixed top-10 right-10 z-40 flex flex-col items-end gap-2 select-none">
+        <span class="text-[11px] tracking-widest text-gray-400 font-bold uppercase opacity-90">Download voidtrap</span>
+        <button id="triggerModalBtn" class="glass-btn-premium text-xs font-bold px-6 py-3 rounded-full text-gray-600 tracking-wider cursor-pointer">
+            DOWNLOAD
+        </button>
+    </div>
+
     <div id="mainCard" class="glass-main-card w-full max-w-3xl rounded-[3.5rem] p-10 md:p-14 relative my-auto">
         
         <div class="text-center mb-10 select-none">
@@ -156,6 +163,24 @@
         <div class="glass-toast px-7 py-4 rounded-2xl flex items-center gap-4">
             <div class="w-2 h-2 rounded-full bg-gray-400 animate-pulse"></div>
             <span class="text-xs font-bold text-gray-600 tracking-wider">COPIED TO CLIPBOARD</span>
+        </div>
+    </div>
+
+    <div id="downloadModal" class="fixed inset-0 bg-gray-900/10 backdrop-blur-2xl z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1)">
+        <div id="modalContent" class="glass-main-card w-full max-w-md p-10 md:p-12 rounded-[2.5rem] text-center transform scale-95 transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1)">
+            
+            <span class="text-[11px] tracking-[0.4em] text-gray-400 font-bold uppercase block mb-3 opacity-90">NOTIFICATION</span>
+            <h2 class="text-xl font-extrabold text-gray-800 tracking-tight leading-snug mb-8">
+                Please download the latest version.
+            </h2>
+            
+            <a href="https://github.com/voidstrap/Voidstrap/releases" class="glass-btn-premium block text-center text-xs font-bold px-8 py-4 rounded-full text-gray-600 tracking-widest mb-4 shadow-md">
+                DOWNLOAD NOW
+            </a>
+            
+            <button id="closeModalBtn" class="text-[11px] text-gray-400 font-bold tracking-widest hover:text-gray-600 transition-colors cursor-pointer uppercase">
+                CLOSE WINDOW
+            </button>
         </div>
     </div>
 
@@ -287,7 +312,6 @@
 
         copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(jsonString).then(() => {
-                // 修改：顯現時移除 -translate-y-12 並恢復到原位 translate-y-0
                 toast.classList.remove('opacity-0', '-translate-y-12', 'pointer-events-none');
                 toast.classList.add('opacity-100', 'translate-y-0');
                 
@@ -298,6 +322,26 @@
                     toast.classList.add('opacity-0', '-translate-y-12', 'pointer-events-none');
                 }, 2500);
             });
+        });
+
+        // 全螢幕彈窗控制邏輯
+        const triggerModalBtn = document.getElementById('triggerModalBtn');
+        const downloadModal = document.getElementById('downloadModal');
+        const modalContent = document.getElementById('modalContent');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        // 開啟彈窗：全螢幕動態模糊與卡片放大回彈
+        triggerModalBtn.addEventListener('click', () => {
+            downloadModal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-95');
+            modalContent.classList.add('scale-100');
+        });
+
+        // 關閉彈窗
+        closeModalBtn.addEventListener('click', () => {
+            downloadModal.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
         });
     </script>
 </body>
