@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voidtrap FastFlags - Liquid, Glass & Infinite Scroll</title>
+    <title>Voidtrap FastFlags - Top Left Toast Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
@@ -11,13 +11,12 @@
         body {
             font-family: 'Inter', sans-serif;
             background: #E6EAEF;
-            /* 修正：允許垂直滾動，只防止水平溢出 */
             overflow-x: hidden; 
             overflow-y: auto;
             perspective: 1200px; /* 3D 空間透視 */
         }
 
-        /* 自訂網頁滾動條，使其貼合灰白玻璃風格 */
+        /* 網頁滾動條自訂 */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -32,7 +31,7 @@
             background: rgba(0, 0, 0, 0.15);
         }
 
-        /* 1. 主面板：極致重感毛玻璃與深邃陰影 */
+        /* 1. 主面板：重感毛玻璃與深邃陰影 */
         .glass-main-card {
             background: rgba(255, 255, 255, 0.38);
             backdrop-filter: blur(45px) saturate(160%);
@@ -50,7 +49,7 @@
             transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* 2. JSON 內框：凹陷折射玻璃陰影 */
+        /* 2. JSON 內框 */
         .glass-inner-box {
             background: rgba(255, 255, 255, 0.12);
             backdrop-filter: blur(25px);
@@ -62,7 +61,7 @@
                 0 10px 30px rgba(255, 255, 255, 0.5);
         }
 
-        /* 3. 複製按鈕：水滴懸浮陰影 */
+        /* 3. 複製按鈕 */
         .glass-btn-premium {
             background: rgba(255, 255, 255, 0.55);
             border: 1px solid rgba(255, 255, 255, 0.85);
@@ -86,7 +85,7 @@
             transform: translateY(-3px) scale(1.02);
         }
 
-        /* 4. 左下角彈窗：極致邊緣陰影 */
+        /* 4. 左上角彈窗玻璃材質 */
         .glass-toast {
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(30px);
@@ -97,7 +96,7 @@
                 inset 0 2px 4px rgba(255, 255, 255, 0.8);
         }
 
-        /* 修正：水流容器改為 fixed，捲動網頁時背景不會穿幫留白 */
+        /* 水流背景 */
         .water-container {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -120,7 +119,6 @@
             100% { transform: translate(0px, 0px) scale(1) rotate(360deg); border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; }
         }
 
-        /* 內部 JSON 框框的捲軸隱藏 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -154,7 +152,7 @@
         </p>
     </div>
 
-    <div id="toast" class="fixed bottom-10 left-10 opacity-0 transform translate-y-12 transition-all duration-700 cubic-bezier(0.175, 0.885, 0.32, 1.275) z-50 pointer-events-none">
+    <div id="toast" class="fixed top-10 left-10 opacity-0 transform -translate-y-12 transition-all duration-700 cubic-bezier(0.175, 0.885, 0.32, 1.275) z-50 pointer-events-none">
         <div class="glass-toast px-7 py-4 rounded-2xl flex items-center gap-4">
             <div class="w-2 h-2 rounded-full bg-gray-400 animate-pulse"></div>
             <span class="text-xs font-bold text-gray-600 tracking-wider">COPIED TO CLIPBOARD</span>
@@ -162,7 +160,7 @@
     </div>
 
     <script>
-        // 100% 原始數據，完全無 bug 修正，保留所有重複欄位與原始大小寫
+        // 100% 原始數據，不做任何改動
         const fastFlagData = {
           "FFlagEnableLightAttachToPart": "False",
           "DFIntRaknetBandwidthPingSendEveryXSeconds": "1",
@@ -267,19 +265,14 @@
         const jsonString = JSON.stringify(fastFlagData, null, 2);
         document.getElementById('jsonCode').textContent = jsonString;
 
-        // 修正：進階 3D 玻璃傾斜效果（改用 getBoundingClientRect，完美適應網頁滾動）
+        // 進階 3D 玻璃傾斜效果
         const card = document.getElementById('mainCard');
         document.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
-            
-            // 計算滑鼠相對於「卡片中心點」的絕對坐標
             const cardCenterX = rect.left + rect.width / 2;
             const cardCenterY = rect.top + rect.height / 2;
-            
-            // e.clientX / clientY 不受網頁滾動影響，精準適配
             const xAxis = (cardCenterX - e.clientX) / 45;
             const yAxis = (cardCenterY - e.clientY) / 45;
-            
             card.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
         });
 
@@ -287,21 +280,22 @@
             card.style.transform = `rotateY(0deg) rotateX(0deg)`;
         });
 
-        // 按下 COPY 按鈕：左下角彈出動態 Toast
+        // 按下 COPY 按鈕：左上角滑下彈出 Toast
         const copyBtn = document.getElementById('copyBtn');
         const toast = document.getElementById('toast');
         let timeoutId = null;
 
         copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(jsonString).then(() => {
-                toast.classList.remove('opacity-0', 'translate-y-12', 'pointer-events-none');
+                // 修改：顯現時移除 -translate-y-12 並恢復到原位 translate-y-0
+                toast.classList.remove('opacity-0', '-translate-y-12', 'pointer-events-none');
                 toast.classList.add('opacity-100', 'translate-y-0');
                 
                 if (timeoutId) clearTimeout(timeoutId);
 
                 timeoutId = setTimeout(() => {
                     toast.classList.remove('opacity-100', 'translate-y-0');
-                    toast.classList.add('opacity-0', 'translate-y-12', 'pointer-events-none');
+                    toast.classList.add('opacity-0', '-translate-y-12', 'pointer-events-none');
                 }, 2500);
             });
         });
