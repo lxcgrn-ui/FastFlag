@@ -1,1 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FluxFlags - Bloxstrap / Voidtrap FastFlags</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            overflow-x: hidden;
+        }
 
+        /* 水流感背景動畫 */
+        .water-blob {
+            position: absolute;
+            background: radial-gradient(circle, rgba(219, 234, 254, 0.7) 0%, rgba(255, 255, 255, 0) 70%);
+            mix-blend-mode: multiply;
+            filter: blur(40px);
+            animation: float Water 20s infinite alternate ease-in-out;
+            z-index: 0;
+        }
+
+        @keyframes floatWater {
+            0% { transform: translate(0px, 0px) scale(1) rotate(0deg); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+            50% { transform: translate(100px, 80px) scale(1.2) rotate(180deg); border-radius: 60% 40% 30% 70% / 50% 60% 40% 60%; }
+            100% { transform: translate(-50px, 40px) scale(0.9) rotate(360deg); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+        }
+
+        /* 玻璃材質 (Glassmorphism) */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 50px rgba(31, 38, 135, 0.04),
+                        inset 0 1px 1px rgba(255, 255, 255, 0.6);
+        }
+
+        .glass-code-box {
+            background: rgba(248, 250, 252, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        /* 水滴質感按鈕 */
+        .water-btn {
+            background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03),
+                        inset 0 1px 2px rgba(255, 255, 255, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .water-btn:hover {
+            background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(239,246,255,0.8) 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.1),
+                        inset 0 1px 2px rgba(255, 255, 255, 1);
+        }
+
+        .water-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* 隱藏捲軸但保持可滾動 */
+        .no-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .no-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .no-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8 relative">
+
+    <div class="water-blob w-[500px] h-[500px] top-[-10%] left-[-10%]"></div>
+    <div class="water-blob w-[600px] h-[600px] bottom-[-20%] right-[-10%]" style="animation-delay: -5s; animation-duration: 25s;"></div>
+
+    <div class="glass-panel w-full max-w-4xl rounded-[2.5rem] p-6 md:p-10 relative z-10 transition-all duration-500">
+        
+        <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
+                    <span class="text-blue-400 drop-shadow-[0_2px_10px_rgba(59,130,246,0.2)]">💧</span> FluxFlags 配置
+                </h1>
+                <p class="text-gray-500 text-sm mt-1">適用於 Bloxstrap / Voidtrap 的優化 FastFlag JSON</p>
+            </div>
+            <div class="text-xs text-gray-400 bg-white/40 px-4 py-2 rounded-full border border-white/50">
+                狀態: 穩定優化版
+            </div>
+        </div>
+
+        <div class="relative glass-code-box rounded-3xl p-6 transition-all duration-300 group hover:shadow-xl hover:shadow-blue-500/5">
+            
+            <button id="copyBtn" class="absolute top-4 right-4 water-btn text-gray-600 font-medium text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 cursor-pointer">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5A3.375 3.375 0 006.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0015 2.25h-1.5a2.251 2.251 0 00-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 00-9-9z"></path>
+                </svg>
+                複製 JSON
+            </button>
+
+            <div class="max-h-[500px] overflow-y-auto no-scrollbar mt-6 pr-2">
+                <pre class="text-sm font-mono text-gray-700 leading-relaxed selection:bg-blue-100"><code id="jsonCode"></code></pre>
+            </div>
+        </div>
+
+        <div class="mt-6 flex items-center justify-between text-xs text-gray-400 px-2">
+            <div>💡 提示：將此配置貼入 ClientAppSettings.json 中即可生效。</div>
+            <div>材質：Liquid & Glass v1.0</div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-6 left-6 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275)">
+        <div class="bg-white/70 backdrop-blur-xl border border-white/80 px-5 py-3 rounded-2xl shadow-xl shadow-gray-200/50 flex items-center gap-3">
+            <div class="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 text-xs shadow-inner">✓</div>
+            <div>
+                <p class="text-sm font-semibold text-gray-800">複製成功！</p>
+                <p class="text-[11px] text-gray-400">已成功複製到您的剪貼簿</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 放入你提供的 FastFlag JSON 資料
+        const fastFlagData = {
+          "FFlagEnableLightAttachToPart": "False",
+          "DFIntRaknetBandwidthPingSendEveryXSeconds": "1",
+          "FFlagDebugDisableTelemetryEventIngest": "True",
+          "FFlagDebugDisableTelemetryEphemeralCounter": "True",
+          "FFlagFixScalingModelRendering": "False",
+          "FFlagDebugSkyGray": "True",
+          "DFStringLightstepHTTPTransportUrlHost": "null",
+          "FFlagDebugCrashReports": "False",
+          "FLogNetwork": "7",
+          "FFlagEnableNewInput": "True",
+          "FIntFullscreenTitleBarTriggerDelayMillis": "3600000",
+          "FFlagEnableHumanoidLuaSideCaching": "False",
+          "FFlagOptimizeNetworkTransport": "True",
+          "FFlagCommitToGraphicsQualityFix": "True",
+          "FFlagPreloadAllFonts": "False",
+          "FFlagFixGraphicsQuality": "True",
+          "FFlagUseDeferredContext": "False",
+          "FStringGamesUrlPath": "/games/",
+          "DFIntCSGLevelOfDetailSwitchingDistanceL23": "0",
+          "DFStringLightstepToken": "null",
+          "FIntRakNetResendBufferArrayLength": "128",
+          "FFlagDebugGraphicsPreferD3D11": "True",
+          "DFStringCrashUploadToBacktraceMacPlayerToken": "null",
+          "FFlagFixMeshPartScaling": "False",
+          "FFlagHandleAltEnterFullscreenManually": "False",
+          "FFlagEnableTerrainFoliageOptimizations": "True",
+          "FStringCoreScriptBacktraceErrorUploadToken": "null",
+          "DFStringHttpPointsReporterUrl": "null",
+          "FFlagUseNewAnimationSystem": "False",
+          "DFIntCSGLevelOfDetailSwitchingDistanceL34": "0",
+          "DFFlagDisableFastLogTelemetry": "True",
+          "FFlagDebugDisplayFPS": "False",
+          "FIntTerrainArraySliceSize": "0",
+          "DFIntOptimizePingThreshold": "50",
+          "DFFlagBrowserTrackerIdTelemetryEnabled": "False",
+          "FFlagSimIslandizerManager": "false",
+          "FFlagAnimatePhysics": "False",
+          "DFFlagBaseNetworkMetrics": "False",
+          "FFlagLuaAppSystemBar": "False",
+          "DFIntCSGLevelOfDetailSwitchingDistanceL12": "0",
+          "FIntRenderShadowIntensity": "0",
+          "FFlagAdServiceEnabled": "False",
+          "DFIntServerTickRate": "60",
+          "FFlagOptimizeNetworkRouting": "True",
+          "DFIntNetworkPrediction": "120",
+          "FFlagDebugDisableTelemetryV2Stat": "True",
+          "DFStringTelegrafHTTPTransportUrl": "null",
+          "FFlagNewNetworking": "False",
+          "DFIntPlayerNetworkUpdateRate": "60",
+          "DFIntServerPhysicsUpdateRate": "60",
+          "DFStringAltTelegrafHTTPTransportUrl": "null",
+          "FFlagEnableTerrainOptimizations": "True",
+          "DFIntCSGLevelOfDetailSwitchingDistance": "0",
+          "DFFlagDebugPerfMode": "False",
+          "DFIntNetworkLatencyTolerance": "1",
+          "FFlagUseDynamicSun": "False",
+          "DFIntNewRunningBaseAltitudeD": "45",
+          "DFFlagDebugPauseVoxelizer": "True",
+          "FFlagDebugDisableTelemetryV2Event": "True",
+          "FFlagFastGPULightCulling3": "True",
+          "FIntDebugForceMSAASamples": "1",
+          "FFlagUseParticlesV2": "False",
+          "DFStringCrashUploadToBacktraceWindowsPlayerToken": "null",
+          "DFStringLightstepHTTPTransportUrlPath": "null",
+          "DFIntTaskSchedulerTargetFps": "999999",
+          "FFlagOptimizeServerTickRate": "True",
+          "FFlagOptimizeNetwork": "True",
+          "DFFlagDebugRenderForceTechnologyVoxel": "True",
+          "DFIntS2PhysicsSenderRate": "250",
+          "FFlagOptimizeEmotes": "False",
+          "DFStringRobloxAnalyticsURL": "null",
+          "FFlagDebugDisableTelemetryPoint": "True",
+          "DFFlagDisableDPIScale": "True",
+          "DFStringCrashUploadToBacktraceBaseUrl": "null",
+          "DFIntPlayerNetworkUpdateQueueSize": "20",
+          "FFlagDisablePostFx": "True",
+          "FFlagEnableNewHeapSnapshots": "False",
+          "DFIntClientLightingTechnologyChangedTelemetryHundredthsPercent": "0",
+          "FFlagNewLightAttenuation": "True",
+          "DFFlagTextureQualityOverrideEnabled": "True",
+          "FFlagDebugDisableTelemetryV2Counter": "True",
+          "DFIntLightstepHTTPTransportHundredthsPercent2": "0",
+          "DFIntRakNetResendRttMultiple": "1",
+          "DFIntRunningBaseOrientationP": "115",
+          "DFIntDebugFRMQualityLevelOverride": "1",
+          "FFlagTweenOptimizations": "True",
+          "DFFlagEnableLightstepReporting2": "False",
+          "DFStringAltHttpPointsReporterUrl": "null",
+          "FFlagDebugGraphicsPreferD3D11FL10": "True",
+          "FFlagDisableDPIScale": "True",
+          "FFlagDebugDisableTelemetryEphemeralStat": "True",
+          "DFIntConnectionMTUSize": "900",
+          "DFIntTextureQualityOverride": "3",
+          "FFlagUseUnifiedRenderStepped": "False",
+          "FFlagTaskSchedulerLimitTargetFpsTo2402": "False",
+          "FIntFontSizePadding": "4",
+          "DFIntRenderingThrottleDelayInMS": "1",
+          "DFStringTelemetryV2Url": "null"
+        };
+
+        // 將 JSON 漂亮地印在網頁上
+        const codeElement = document.getElementById('jsonCode');
+        const jsonString = JSON.stringify(fastFlagData, null, 2);
+        codeElement.textContent = jsonString;
+
+        // 複製按鈕功能與左下角 Toast 特效
+        const copyBtn = document.getElementById('copyBtn');
+        const toast = document.getElementById('toast');
+        let timeoutId = null;
+
+        copyBtn.addEventListener('click', () => {
+            // 執行複製
+            navigator.clipboard.writeText(jsonString).then(() => {
+                // 顯示左下角 Toast
+                toast.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+                toast.classList.add('opacity-100', 'translate-y-0');
+
+                // 按鈕文字小反饋
+                copyBtn.innerHTML = `💧 已複製！`;
+                
+                // 清除之前的計時器，避免快速連點出錯
+                if (timeoutId) clearTimeout(timeoutId);
+
+                // 2.5 秒後自動收回
+                timeoutId = setTimeout(() => {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+                    copyBtn.innerHTML = `
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5A3.375 3.375 0 006.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0015 2.25h-1.5a2.251 2.251 0 00-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 00-9-9z"></path>
+                        </svg>
+                        複製 JSON
+                    `;
+                }, 2500);
+            }).catch(err => {
+                console.error('無法複製文字: ', err);
+            });
+        });
+    </script>
+</body>
+</html>
