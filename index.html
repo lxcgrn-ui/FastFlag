@@ -1,10 +1,10 @@
-html_content = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voidtrap FastFlags - Ultimate Download Edition</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/lxcgrn-ui/FastFlag/main/r.png">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/lxcgrn-ui/FastFlag/main/voidtrap%20log.png">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -193,7 +193,7 @@ html_content = """<!DOCTYPE html>
     </div>
 
     <div id="downloadModal" class="fixed inset-0 bg-gray-900/10 backdrop-blur-2xl z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1)">
-        <div id="modalContent" class="glass-main-card w-full max-w-md p-10 md:p-12 rounded-[2.5rem] text-center transform scale-95 transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) relative flex flex-col justify-center items-center min-h-[320px]">
+        <div id="modalContent" class="glass-main-card w-full max-w-md min-h-[320px] p-10 md:p-12 rounded-[2.5rem] text-center transform scale-95 transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) flex flex-col justify-center items-center">
             
             <div id="modalStaticContent" class="w-full flex flex-col items-center transition-all duration-300 opacity-100">
                 <span class="text-[11px] tracking-[0.4em] text-gray-400 font-bold uppercase block mb-3 opacity-90">NOTIFICATION</span>
@@ -210,7 +210,7 @@ html_content = """<!DOCTYPE html>
                 </button>
             </div>
 
-            <div id="spinnerContainer" class="absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0 pointer-events-none">
+            <div id="spinnerContainer" class="hidden w-full flex items-center justify-center transition-all duration-300 opacity-0">
                 <div class="apple-spinner-large">
                     <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
                 </div>
@@ -378,32 +378,38 @@ html_content = """<!DOCTYPE html>
 
         realDownloadBtn.addEventListener('click', () => {
             modalStaticContent.classList.remove('opacity-100');
-            modalStaticContent.classList.add('opacity-0', 'pointer-events-none');
+            modalStaticContent.classList.add('opacity-0');
 
             setTimeout(() => {
-                spinnerContainer.classList.remove('opacity-0', 'pointer-events-none');
-                spinnerContainer.classList.add('opacity-100');
-            }, 150);
+                modalStaticContent.classList.add('hidden');
+                spinnerContainer.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    spinnerContainer.classList.remove('opacity-0');
+                    spinnerContainer.classList.add('opacity-100');
+                }, 50);
+            }, 300);
 
             setTimeout(() => {
                 window.open('https://github.com/voidstrap/Voidstrap/releases', '_blank');
 
                 setTimeout(() => {
                     spinnerContainer.classList.remove('opacity-100');
-                    spinnerContainer.classList.add('opacity-0', 'pointer-events-none');
+                    spinnerContainer.classList.add('opacity-0');
 
                     setTimeout(() => {
-                        modalStaticContent.classList.remove('opacity-0', 'pointer-events-none');
-                        modalStaticContent.classList.add('opacity-100');
-                    }, 150);
+                        spinnerContainer.classList.add('hidden');
+                        modalStaticContent.classList.remove('hidden');
+                        
+                        setTimeout(() => {
+                            modalStaticContent.classList.remove('opacity-0');
+                            modalStaticContent.classList.add('opacity-100');
+                        }, 50);
+                    }, 300);
                 }, 500);
 
             }, 3500);
         });
     </script>
 </body>
-</html>"""
-
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
-print("File generated successfully.")
+</html>
