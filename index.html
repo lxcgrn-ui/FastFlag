@@ -6,7 +6,7 @@
     <title>Voidtrap FastFlags - Ultimate Download Edition</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/lxcgrn-ui/FastFlag/main/r.png">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;600;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -109,6 +109,43 @@
         }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        .apple-spinner {
+            position: relative;
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+        }
+
+        .apple-spinner div {
+            position: absolute;
+            width: 12%;
+            height: 28%;
+            background: #4B5563;
+            left: 44%;
+            top: 36%;
+            border-radius: 50px;
+            animation: appleFade 1s linear infinite;
+            transform-origin: center -50%;
+        }
+
+        .apple-spinner div:nth-child(1) { transform: rotate(0deg) translate(0, -50%); animation-delay: 0s; }
+        .apple-spinner div:nth-child(2) { transform: rotate(30deg) translate(0, -50%); animation-delay: -0.9167s; }
+        .apple-spinner div:nth-child(3) { transform: rotate(60deg) translate(0, -50%); animation-delay: -0.8333s; }
+        .apple-spinner div:nth-child(4) { transform: rotate(90deg) translate(0, -50%); animation-delay: -0.75s; }
+        .apple-spinner div:nth-child(5) { transform: rotate(120deg) translate(0, -50%); animation-delay: -0.6667s; }
+        .apple-spinner div:nth-child(6) { transform: rotate(150deg) translate(0, -50%); animation-delay: -0.5833s; }
+        .apple-spinner div:nth-child(7) { transform: rotate(180deg) translate(0, -50%); animation-delay: -0.5s; }
+        .apple-spinner div:nth-child(8) { transform: rotate(210deg) translate(0, -50%); animation-delay: -0.4167s; }
+        .apple-spinner div:nth-child(9) { transform: rotate(240deg) translate(0, -50%); animation-delay: -0.3333s; }
+        .apple-spinner div:nth-child(10) { transform: rotate(270deg) translate(0, -50%); animation-delay: -0.25s; }
+        .apple-spinner div:nth-child(11) { transform: rotate(300deg) translate(0, -50%); animation-delay: -0.1667s; }
+        .apple-spinner div:nth-child(12) { transform: rotate(330deg) translate(0, -50%); animation-delay: -0.0833s; }
+
+        @keyframes appleFade {
+            0% { opacity: 1; }
+            100% { opacity: 0.15; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center py-16 px-4 md:px-8 relative">
@@ -163,9 +200,12 @@
                 Please download the latest version.
             </h2>
             
-            <a href="https://github.com/voidstrap/Voidstrap/releases" class="glass-btn-premium block text-center text-xs font-bold px-8 py-4 rounded-full text-gray-600 tracking-widest mb-4 shadow-md">
-                DOWNLOAD NOW
-            </a>
+            <button id="realDownloadBtn" class="glass-btn-premium w-full text-center text-xs font-bold px-8 py-4 rounded-full text-gray-600 tracking-widest mb-4 shadow-md cursor-pointer flex items-center justify-center gap-3">
+                <span id="btnText">DOWNLOAD NOW</span>
+                <div id="appleSpinner" class="apple-spinner hidden">
+                    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                </div>
+            </button>
             
             <button id="closeModalBtn" class="text-[11px] text-gray-400 font-bold tracking-widest hover:text-gray-600 transition-colors cursor-pointer uppercase">
                 CLOSE WINDOW
@@ -314,6 +354,9 @@
         const downloadModal = document.getElementById('downloadModal');
         const modalContent = document.getElementById('modalContent');
         const closeModalBtn = document.getElementById('closeModalBtn');
+        const realDownloadBtn = document.getElementById('realDownloadBtn');
+        const btnText = document.getElementById('btnText');
+        const appleSpinner = document.getElementById('appleSpinner');
 
         triggerModalBtn.addEventListener('click', () => {
             downloadModal.classList.remove('opacity-0', 'pointer-events-none');
@@ -325,6 +368,22 @@
             downloadModal.classList.add('opacity-0', 'pointer-events-none');
             modalContent.classList.remove('scale-100');
             modalContent.classList.add('scale-95');
+        });
+
+        realDownloadBtn.addEventListener('click', () => {
+            if (realDownloadBtn.style.pointerEvents === 'none') return;
+
+            realDownloadBtn.style.pointerEvents = 'none';
+            btnText.textContent = 'PREPARING...';
+            appleSpinner.classList.remove('hidden');
+
+            setTimeout(() => {
+                window.open('https://github.com/voidstrap/Voidstrap/releases', '_blank');
+
+                btnText.textContent = 'DOWNLOAD NOW';
+                appleSpinner.classList.add('hidden');
+                realDownloadBtn.style.pointerEvents = 'auto';
+            }, 3500);
         });
     </script>
 </body>
