@@ -110,39 +110,39 @@
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
 
-        .apple-spinner {
+        .apple-spinner-large {
             position: relative;
-            width: 16px;
-            height: 16px;
+            width: 48px;
+            height: 48px;
             display: inline-block;
         }
 
-        .apple-spinner div {
+        .apple-spinner-large div {
             position: absolute;
-            width: 12%;
-            height: 28%;
+            width: 8%;
+            height: 24%;
             background: #4B5563;
-            left: 44%;
-            top: 36%;
+            left: 46%;
+            top: 38%;
             border-radius: 50px;
-            animation: appleFade 1s linear infinite;
-            transform-origin: center -50%;
+            animation: appleFadeLarge 1s linear infinite;
+            transform-origin: center -58%;
         }
 
-        .apple-spinner div:nth-child(1) { transform: rotate(0deg) translate(0, -50%); animation-delay: 0s; }
-        .apple-spinner div:nth-child(2) { transform: rotate(30deg) translate(0, -50%); animation-delay: -0.9167s; }
-        .apple-spinner div:nth-child(3) { transform: rotate(60deg) translate(0, -50%); animation-delay: -0.8333s; }
-        .apple-spinner div:nth-child(4) { transform: rotate(90deg) translate(0, -50%); animation-delay: -0.75s; }
-        .apple-spinner div:nth-child(5) { transform: rotate(120deg) translate(0, -50%); animation-delay: -0.6667s; }
-        .apple-spinner div:nth-child(6) { transform: rotate(150deg) translate(0, -50%); animation-delay: -0.5833s; }
-        .apple-spinner div:nth-child(7) { transform: rotate(180deg) translate(0, -50%); animation-delay: -0.5s; }
-        .apple-spinner div:nth-child(8) { transform: rotate(210deg) translate(0, -50%); animation-delay: -0.4167s; }
-        .apple-spinner div:nth-child(9) { transform: rotate(240deg) translate(0, -50%); animation-delay: -0.3333s; }
-        .apple-spinner div:nth-child(10) { transform: rotate(270deg) translate(0, -50%); animation-delay: -0.25s; }
-        .apple-spinner div:nth-child(11) { transform: rotate(300deg) translate(0, -50%); animation-delay: -0.1667s; }
-        .apple-spinner div:nth-child(12) { transform: rotate(330deg) translate(0, -50%); animation-delay: -0.0833s; }
+        .apple-spinner-large div:nth-child(1) { transform: rotate(0deg) translate(0, -50%); animation-delay: 0s; }
+        .apple-spinner-large div:nth-child(2) { transform: rotate(30deg) translate(0, -50%); animation-delay: -0.9167s; }
+        .apple-spinner-large div:nth-child(3) { transform: rotate(60deg) translate(0, -50%); animation-delay: -0.8333s; }
+        .apple-spinner-large div:nth-child(4) { transform: rotate(90deg) translate(0, -50%); animation-delay: -0.75s; }
+        .apple-spinner-large div:nth-child(5) { transform: rotate(120deg) translate(0, -50%); animation-delay: -0.6667s; }
+        .apple-spinner-large div:nth-child(6) { transform: rotate(150deg) translate(0, -50%); animation-delay: -0.5833s; }
+        .apple-spinner-large div:nth-child(7) { transform: rotate(180deg) translate(0, -50%); animation-delay: -0.5s; }
+        .apple-spinner-large div:nth-child(8) { transform: rotate(210deg) translate(0, -50%); animation-delay: -0.4167s; }
+        .apple-spinner-large div:nth-child(9) { transform: rotate(240deg) translate(0, -50%); animation-delay: -0.3333s; }
+        .apple-spinner-large div:nth-child(10) { transform: rotate(270deg) translate(0, -50%); animation-delay: -0.25s; }
+        .apple-spinner-large div:nth-child(11) { transform: rotate(300deg) translate(0, -50%); animation-delay: -0.1667s; }
+        .apple-spinner-large div:nth-child(12) { transform: rotate(330deg) translate(0, -50%); animation-delay: -0.0833s; }
 
-        @keyframes appleFade {
+        @keyframes appleFadeLarge {
             0% { opacity: 1; }
             100% { opacity: 0.15; }
         }
@@ -193,23 +193,29 @@
     </div>
 
     <div id="downloadModal" class="fixed inset-0 bg-gray-900/10 backdrop-blur-2xl z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1)">
-        <div id="modalContent" class="glass-main-card w-full max-w-md p-10 md:p-12 rounded-[2.5rem] text-center transform scale-95 transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1)">
+        <div id="modalContent" class="glass-main-card w-full max-w-md min-h-[320px] p-10 md:p-12 rounded-[2.5rem] text-center transform scale-95 transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) flex flex-col justify-center items-center">
             
-            <span class="text-[11px] tracking-[0.4em] text-gray-400 font-bold uppercase block mb-3 opacity-90">NOTIFICATION</span>
-            <h2 class="text-xl font-extrabold text-gray-800 tracking-tight leading-snug mb-8">
-                Please download the latest version.
-            </h2>
-            
-            <button id="realDownloadBtn" class="glass-btn-premium w-full text-center text-xs font-bold px-8 py-4 rounded-full text-gray-600 tracking-widest mb-4 shadow-md cursor-pointer flex items-center justify-center gap-3">
-                <span id="btnText">DOWNLOAD NOW</span>
-                <div id="appleSpinner" class="apple-spinner hidden">
+            <div id="modalStaticContent" class="w-full flex flex-col items-center transition-all duration-300 opacity-100">
+                <span class="text-[11px] tracking-[0.4em] text-gray-400 font-bold uppercase block mb-3 opacity-90">NOTIFICATION</span>
+                <h2 class="text-xl font-extrabold text-gray-800 tracking-tight leading-snug mb-8">
+                    Please download the latest version.
+                </h2>
+                
+                <button id="realDownloadBtn" class="glass-btn-premium w-full text-center text-xs font-bold px-8 py-4 rounded-full text-gray-600 tracking-widest mb-4 shadow-md cursor-pointer">
+                    DOWNLOAD NOW
+                </button>
+                
+                <button id="closeModalBtn" class="text-[11px] text-gray-400 font-bold tracking-widest hover:text-gray-600 transition-colors cursor-pointer uppercase">
+                    CLOSE WINDOW
+                </button>
+            </div>
+
+            <div id="spinnerContainer" class="hidden w-full flex items-center justify-center transition-all duration-300 opacity-0">
+                <div class="apple-spinner-large">
                     <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
                 </div>
-            </button>
-            
-            <button id="closeModalBtn" class="text-[11px] text-gray-400 font-bold tracking-widest hover:text-gray-600 transition-colors cursor-pointer uppercase">
-                CLOSE WINDOW
-            </button>
+            </div>
+
         </div>
     </div>
 
@@ -355,8 +361,8 @@
         const modalContent = document.getElementById('modalContent');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const realDownloadBtn = document.getElementById('realDownloadBtn');
-        const btnText = document.getElementById('btnText');
-        const appleSpinner = document.getElementById('appleSpinner');
+        const modalStaticContent = document.getElementById('modalStaticContent');
+        const spinnerContainer = document.getElementById('spinnerContainer');
 
         triggerModalBtn.addEventListener('click', () => {
             downloadModal.classList.remove('opacity-0', 'pointer-events-none');
@@ -371,18 +377,37 @@
         });
 
         realDownloadBtn.addEventListener('click', () => {
-            if (realDownloadBtn.style.pointerEvents === 'none') return;
+            modalStaticContent.classList.remove('opacity-100');
+            modalStaticContent.classList.add('opacity-0');
 
-            realDownloadBtn.style.pointerEvents = 'none';
-            btnText.textContent = 'PREPARING...';
-            appleSpinner.classList.remove('hidden');
+            setTimeout(() => {
+                modalStaticContent.classList.add('hidden');
+                spinnerContainer.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    spinnerContainer.classList.remove('opacity-0');
+                    spinnerContainer.classList.add('opacity-100');
+                }, 50);
+            }, 300);
 
             setTimeout(() => {
                 window.open('https://github.com/voidstrap/Voidstrap/releases', '_blank');
 
-                btnText.textContent = 'DOWNLOAD NOW';
-                appleSpinner.classList.add('hidden');
-                realDownloadBtn.style.pointerEvents = 'auto';
+                setTimeout(() => {
+                    spinnerContainer.classList.remove('opacity-100');
+                    spinnerContainer.classList.add('opacity-0');
+
+                    setTimeout(() => {
+                        spinnerContainer.classList.add('hidden');
+                        modalStaticContent.classList.remove('hidden');
+                        
+                        setTimeout(() => {
+                            modalStaticContent.classList.remove('opacity-0');
+                            modalStaticContent.classList.add('opacity-100');
+                        }, 50);
+                    }, 300);
+                }, 500);
+
             }, 3500);
         });
     </script>
